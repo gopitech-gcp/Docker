@@ -1,0 +1,56 @@
+Docker Client: This is the CLI of docker where the user can execute the docker commands, The docker client
+accepts these commands and passes them to a background process called "docker daemon"
+
+Docker deamon: This process accepts the commands coming from the docker client and routes them to 
+work on docker images or containers or the docker registry
+
+Docker registry: This is the cloud site of docker where docker images are stored. This is of two types
+ 1 Public Registry( hub.docker.com)
+ 2 Private Registry(Setup on one of our local servers
+
+
+From - The base image to use
+● Run - Runs commands when building 
+the docker image
+● Workdir - Specifies the directory that 
+commands are run from
+● User - Switches users
+● Copy - Copies Files
+● CMD - Runs commands when 
+running the container
+
+=========================
+Multi stage Docker file :
+# Stage 1: Build Stage
+FROM node:14 AS build
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the application
+RUN npm run build
+
+# Stage 2: Production Stage
+FROM node:14 AS production
+
+# Set the working directory
+WORKDIR /app
+
+# Copy only the built files and dependencies from the build stage
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/package*.json ./
+
+# Install only production dependencies
+RUN npm install --only=production
+
+# Start the application
+CMD ["node", "dist/index.js"]
