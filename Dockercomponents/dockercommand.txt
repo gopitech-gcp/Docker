@@ -1,0 +1,19 @@
+1. Docker build
+    docker build -t nginx:latest
+docker build it from different location
+      docker build -t my-image -f /home/user/dockerfiles/Dockerfile /home/user/dockerfiles
+
+2. Docker Run
+    docker run -d --name my-container nginx:latest
+    with port : docker run -d -p 80:80: nginx
+3. Attach volume in Docker
+      Create volume : docker volume create my-volume
+      docker network create my-network
+4. COPY and ADD Difference?
+        COPY : its a stright forward copy file or directory from host machine to inside container
+          COPY ./app /usr/src/app
+        ADD : ADD can take a URL as the source.If the source is a .tar, .tar.gz, .tar.bz2, or .tar.xz file, ADD will automatically extract its contents into the container’s destination directory.
+      ADD https://example.com/app.tar.gz /usr/src/app
+
+
+    
